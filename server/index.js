@@ -2,10 +2,13 @@ import express from "express";
 import mongoose from "mongoose";
 import dotevn from "dotenv";
 import userRoutes from "./routes/userRoute.js";
+import authRoutes from "./routes/authRoute.js";
 
 dotevn.config();
 
 const app = express();
+app.use(express.json()) // this line allows json in backend
+
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => {
@@ -21,3 +24,4 @@ app.listen(3000, () => {
 
 // Routing
 app.use("/api", userRoutes);
+app.use("/api/auth", authRoutes);
