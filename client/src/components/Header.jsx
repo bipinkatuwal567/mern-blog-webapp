@@ -27,15 +27,15 @@ const Header = () => {
         <AiOutlineSearch className="text-lg" />
       </Button>
 
-      <div className="flex justify-center items-center gap-2 lg:order-2">
+      <div className="flex justify-center items-center gap-2 md:order-2">
         <Button
-          className="h-10 w-12 flex justify-center items-center lg:hidden"
+          className="h-10 w-12 flex justify-center items-center"
           pill
           color={"gray"}
         >
           <AiOutlineMoon className="text-lg" />
         </Button>
-        <Button gradientDuoTone={"cyanToBlue"}>
+        <Button gradientDuoTone={"cyanToBlue"} outline>
           <Link to={"sign-in"}>Sign in</Link>
         </Button>
         <Navbar.Toggle />
