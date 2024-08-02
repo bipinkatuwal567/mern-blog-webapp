@@ -7,7 +7,7 @@ import { AiOutlineMoon, AiOutlineSearch } from "react-icons/ai";
 const Header = () => {
   const path = useLocation().pathname;
   return (
-    <Navbar>
+    <Navbar className="shadow">
       <Link to={"/"}>
         <img src={Logo} className="flex-none w-10" />
       </Link>
