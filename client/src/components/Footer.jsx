@@ -67,7 +67,7 @@ const FooterComponents = () => {
         </div>
 
         <Footer.Divider />
-        <div>
+        <div className="flex flex-col items-center">
           <div>
             <Footer.Copyright
               href="#"
