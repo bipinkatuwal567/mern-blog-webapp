@@ -8,6 +8,7 @@ import {
   signInSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import GoogleOAuth from "../components/GoogleOAuth";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -103,6 +104,7 @@ const SignIn = () => {
                 "Sign In"
               )}
             </Button>
+            <GoogleOAuth />
           </form>
 
           <div className="mt-5 flex gap-1 text-sm">

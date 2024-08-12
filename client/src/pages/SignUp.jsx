@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Logo from "../assets/forest.png";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
+import GoogleOAuth from "../components/GoogleOAuth";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -108,6 +109,7 @@ const SignUp = () => {
                 "Sign Up"
               )}
             </Button>
+            <GoogleOAuth />
           </form>
 
           <div className="mt-5 flex gap-1 text-sm">
