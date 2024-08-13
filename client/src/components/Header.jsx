@@ -1,10 +1,13 @@
-import { Button, Navbar, TextInput } from "flowbite-react";
+import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/forest.png";
 import { AiOutlineMoon, AiOutlineSearch } from "react-icons/ai";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const { currentUser } = useSelector((state) => state.user);
+
   const path = useLocation().pathname;
   return (
     <Navbar className="shadow">
@@ -35,9 +38,31 @@ const Header = () => {
         >
           <AiOutlineMoon className="text-lg" />
         </Button>
-        <Button gradientDuoTone={"cyanToBlue"} outline>
-          <Link to={"sign-in"}>Sign in</Link>
-        </Button>
+        {currentUser ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar img={currentUser.profilePicutre} alt="user" rounded />
+            }
+          >
+            <Dropdown.Header className="flex flex-col gap-3">
+              <span className="block text-sm">{currentUser.username}</span>
+              <span className="block text-sm font-semibold truncate">
+                {currentUser.email}
+              </span>
+            </Dropdown.Header>
+            <Link to={"/dashboard?tab=profile"}>
+              <Dropdown.Item>Profile</Dropdown.Item>
+            </Link>
+            <Dropdown.Divider />
+            <Dropdown.Item>Sign out</Dropdown.Item>
+          </Dropdown>
+        ) : (
+          <Button gradientDuoTone={"cyanToBlue"} outline>
+            <Link to={"sign-in"}>Sign in</Link>
+          </Button>
+        )}
         <Navbar.Toggle />
       </div>
 
