@@ -2,10 +2,15 @@ import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/forest.png";
-import { AiOutlineMoon, AiOutlineSearch } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { AiOutlineMoon, AiOutlineSearch, AiOutlineSun } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../redux/theme/themeSlice";
 
 const Header = () => {
+  const { theme } = useSelector((state) => state.theme);
+  console.log(theme);
+  
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
 
   const path = useLocation().pathname;
@@ -35,8 +40,13 @@ const Header = () => {
           className="h-10 w-12 flex justify-center items-center"
           pill
           color={"gray"}
+          onClick={() => dispatch(toggleTheme())}
         >
-          <AiOutlineMoon className="text-lg" />
+          {theme === "light" ? (
+            <AiOutlineMoon className="text-lg" />
+          ) : (
+            <AiOutlineSun className="text-lg" />
+          )}
         </Button>
         {currentUser ? (
           <Dropdown
