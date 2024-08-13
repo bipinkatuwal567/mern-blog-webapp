@@ -8,14 +8,13 @@ import { toggleTheme } from "../redux/theme/themeSlice";
 
 const Header = () => {
   const { theme } = useSelector((state) => state.theme);
-  console.log(theme);
-  
+
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
 
   const path = useLocation().pathname;
   return (
-    <Navbar className="shadow">
+    <Navbar className="shadow border-b">
       <Link to={"/"}>
         <img src={Logo} className="flex-none w-10" />
       </Link>
