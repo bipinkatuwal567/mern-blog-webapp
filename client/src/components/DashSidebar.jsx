@@ -34,6 +34,7 @@ export function DashSidebar() {
               label="User"
               labelColor="dark"
               active={tab === "profile"}
+              as={"div"}
             >
               Profile
             </Sidebar.Item>
