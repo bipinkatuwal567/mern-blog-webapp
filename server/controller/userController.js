@@ -19,7 +19,9 @@ export const updateUser = async (req, res, next) => {
   }
 
   if (req.body.username) {
-    if (req.body.username < 7 || req.body.username > 20) {
+    console.log(req.body.username, req.body.username.length);
+
+    if (req.body.username.length < 7 || req.body.username.length > 20) {
       return next(
         errorHandler(400, "Username must be between 7 and 20 characters")
       );
