@@ -19,8 +19,6 @@ export const updateUser = async (req, res, next) => {
   }
 
   if (req.body.username) {
-    console.log(req.body.username, req.body.username.length);
-
     if (req.body.username.length < 7 || req.body.username.length > 20) {
       return next(
         errorHandler(400, "Username must be between 7 and 20 characters")
@@ -59,6 +57,19 @@ export const updateUser = async (req, res, next) => {
     const { password, ...restData } = updatedUser._doc;
 
     res.status(200).json(restData);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  if (req.user.id !== req.params.userId) {
+    return next(errorHandler(403, "You are not allowed to delete this user"));
+  }
+
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json("User has been deleted");
   } catch (error) {
     next(error);
   }
