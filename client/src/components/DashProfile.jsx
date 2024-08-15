@@ -58,8 +58,9 @@ const DashProfile = () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 
           setImageUrl(downloadURL);
+
           // setFormData({ ...formData, profilePicture: downloadURL });
-          // setImageFileUploadProgress(null);
+          setImageFileUploadProgress(null);
         });
       }
     )
@@ -71,7 +72,7 @@ const DashProfile = () => {
       <form className='flex flex-col gap-3 mt-5 w-full py-3 px-5'>
         <input type="file" accept='image/*' onChange={handleImageUpload} ref={imageRef} hidden />
         <div className='relative mx-auto self-center mb-4 shadow-2xl w-32 h-32 rounded-full overflow-hidden' onClick={() => imageRef.current.click()}>
-          <CircularProgressbar strokeWidth={4} value={imageFileUploadProgress || 0} text={`${imageFileUploadProgress}%`} styles={{
+          <CircularProgressbar strokeWidth={4} value={imageFileUploadProgress || 0} text={imageFileUploadProgress && `${imageFileUploadProgress}%`} styles={{
             root: {
               width: '100%',
               height: '100%',
@@ -84,7 +85,7 @@ const DashProfile = () => {
                 })`,
             }
           }} />
-          <img src={imageUrl || currentUser.profilePicutre} alt="user profile" className='rounded-full border-4 h-full w-full border-gray-500 cursor-pointer object-cover' />
+          <img src={imageUrl || currentUser.profilePicture} alt="user profile" className='rounded-full border-4 h-full w-full border-gray-500 cursor-pointer object-cover' />
         </div>
         {
           imageFileUploadError && <Alert color={"failure"}>{imageFileUploadError}</Alert>

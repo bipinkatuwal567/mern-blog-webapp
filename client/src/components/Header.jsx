@@ -11,6 +11,8 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
+  
 
   const path = useLocation().pathname;
   return (
@@ -52,7 +54,7 @@ const Header = () => {
             arrowIcon={false}
             inline
             label={
-              <Avatar img={currentUser.profilePicutre} alt="user" rounded />
+              <Avatar img={currentUser.profilePicture} alt="user" rounded />
             }
           >
             <Dropdown.Header className="flex flex-col gap-3">

@@ -3,11 +3,13 @@ import mongoose from "mongoose";
 import dotevn from "dotenv";
 import userRoutes from "./routes/userRoute.js";
 import authRoutes from "./routes/authRoute.js";
+import cookieParser from "cookie-parser";
 
 dotevn.config();
 
 const app = express();
 app.use(express.json()); // this line allows json in backend
+app.use(cookieParser());
 
 mongoose
   .connect(process.env.DATABASE_URL)
@@ -23,7 +25,7 @@ app.listen(3000, () => {
 });
 
 // Routing
-app.use("/api", userRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 
 // middleware
