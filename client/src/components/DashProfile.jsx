@@ -8,11 +8,12 @@ import { HiOutlineExclamationCircle } from "react-icons/hi"
 
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { Link } from 'react-router-dom';
 
 const DashProfile = () => {
   const dispatch = useDispatch();
   const imageRef = useRef();
-  const { currentUser, error } = useSelector(state => state.user)
+  const { currentUser, error, loading } = useSelector(state => state.user)
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -199,6 +200,15 @@ const DashProfile = () => {
           <TextInput onChange={handleChange} id="password" type="password" placeholder='password' />
         </div>
         <Button type="submit" className=''>Update</Button>
+        {
+          currentUser.isAdmin && (
+            <Link to={"/create-post"}>
+              <Button gradientDuoTone={"tealToLime"} className='w-full'>
+                Create a post
+              </Button>
+            </Link>
+          )
+        }
 
         <div className='w-full flex justify-between'>
           <span className='text-red-500 cursor-pointer' onClick={() => setShowModal(true)}>Delete account</span>
