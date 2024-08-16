@@ -53,7 +53,10 @@ export const signin = async (req, res, next) => {
       return next(errorHandler(400, "User credential is invalid!"));
     }
 
-    const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign(
+      { id: userExist._id, isAdmin: userExist.isAdmin },
+      process.env.JWT_SECRET_KEY
+    );
 
     const { password: pass, ...restData } = userExist._doc;
 
@@ -70,13 +73,15 @@ export const signin = async (req, res, next) => {
 
 export const google = async (req, res, next) => {
   const { name, email, googlePhotoUrl } = req.body;
-  console.log("hey");
 
   try {
     const userExist = await User.findOne({ email });
 
     if (userExist) {
-      const token = jwt.sign({ id: userExist.id }, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign(
+        { id: userExist.id, isAdmin: userExist.isAdmin },
+        process.env.JWT_SECRET_KEY
+      );
 
       const { password, ...restData } = userExist._doc;
       res
@@ -86,8 +91,6 @@ export const google = async (req, res, next) => {
         })
         .json(restData);
     } else {
-      console.log("Hello");
-
       const generatePassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
@@ -102,7 +105,10 @@ export const google = async (req, res, next) => {
       });
 
       await newUser.save();
-      const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign(
+        { id: newUser.id, isAdmin: newUser.isAdmin },
+        process.env.JWT_SECRET_KEY
+      );
 
       const { password: pass, ...restData } = newUser._doc;
       res
