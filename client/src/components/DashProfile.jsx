@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"
 import { app } from "../firebase/firebase"
-import { updateStart, updateSuccess, updateFailure, deleteStart, deleteSuccess, deleteError } from "../redux/user/userSlice.js"
+import { updateStart, updateSuccess, updateFailure, deleteStart, deleteSuccess, deleteError, signOutSuccess } from "../redux/user/userSlice.js"
 import { HiOutlineExclamationCircle } from "react-icons/hi"
 
 import { CircularProgressbar } from 'react-circular-progressbar';
@@ -138,6 +138,21 @@ const DashProfile = () => {
     }
   }
 
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("api/auth/signout", { method: "POST" })
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signOutSuccess())
+      }
+    } catch (error) {
+      console.log(error.message);
+
+    }
+  }
 
 
   return (
@@ -187,7 +202,7 @@ const DashProfile = () => {
 
         <div className='w-full flex justify-between'>
           <span className='text-red-500 cursor-pointer' onClick={() => setShowModal(true)}>Delete account</span>
-          <span className='text-red-500 cursor-pointer'>Sign out</span>
+          <span onClick={handleSignout} className='text-red-500 cursor-pointer'>Sign out</span>
         </div>
 
         {updateUserSuccess && <Alert className='mt-5' color={"success"}>{updateUserSuccess}</Alert>}

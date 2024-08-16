@@ -71,7 +71,6 @@ export const signin = async (req, res, next) => {
 export const google = async (req, res, next) => {
   const { name, email, googlePhotoUrl } = req.body;
   console.log("hey");
-  
 
   try {
     const userExist = await User.findOne({ email });
@@ -88,7 +87,7 @@ export const google = async (req, res, next) => {
         .json(restData);
     } else {
       console.log("Hello");
-      
+
       const generatePassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
@@ -113,6 +112,14 @@ export const google = async (req, res, next) => {
         })
         .json(restData);
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const signout = (req, res, next) => {
+  try {
+    res.clearCookie("access_token").status(200).json("User has been sign out");
   } catch (error) {
     next(error);
   }

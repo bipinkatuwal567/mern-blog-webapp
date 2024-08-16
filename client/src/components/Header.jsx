@@ -5,13 +5,30 @@ import Logo from "../assets/forest.png";
 import { AiOutlineMoon, AiOutlineSearch, AiOutlineSun } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
+import { signOutSuccess } from "../redux/user/userSlice";
 
 const Header = () => {
   const { theme } = useSelector((state) => state.theme);
 
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  
+
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("api/auth/signout", { method: "POST" })
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signOutSuccess())
+      }
+    } catch (error) {
+      console.log(error.message);
+
+    }
+  }
+
 
   const path = useLocation().pathname;
   return (
@@ -66,7 +83,7 @@ const Header = () => {
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Dropdown.Item>Sign out</Dropdown.Item>
+            <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
           </Dropdown>
         ) : (
           <Button gradientDuoTone={"cyanToBlue"} outline>
