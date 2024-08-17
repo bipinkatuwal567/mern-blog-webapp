@@ -1,5 +1,5 @@
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { Button, FileInput, Label, Select, TextInput } from 'flowbite-react'
+import { Alert, Button, FileInput, Label, Select, TextInput } from 'flowbite-react'
 import { useEffect, useState } from 'react';
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import ReactQuill from 'react-quill';
@@ -7,18 +7,21 @@ import 'react-quill/dist/quill.snow.css';
 import { app } from '../firebase/firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { useNavigate } from "react-router-dom"
 
 const CreatePost = () => {
+    const navigate = useNavigate();
     const [image, setImage] = useState(null);
     const [imageUploadProgress, setImageUploadProgress] = useState(null);
     const [imageUploadError, setImageUploadError] = useState(null);
+    const [publishError, setPublishError] = useState(false);
     const [formData, setFormData] = useState({})
 
 
     const handleImageUpload = async () => {
-        if (!image) {
-            return setImageUploadError("No image found!")
-        }
+        // if (!image) {
+        //     return setImageUploadError("No image found!")
+        // }
 
 
         const storage = getStorage(app)
@@ -34,7 +37,7 @@ const CreatePost = () => {
             },
             (error) => {
                 setImageUploadError(
-                    'Could not upload image (File must be less than 2MB)'
+                    'Could not upload image'
                 );
                 setImageUploadProgress(null);
                 setImage(null);
@@ -49,16 +52,47 @@ const CreatePost = () => {
 
     }
 
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await fetch("/api/post/create", {
+                method: "POST",
+                headers: {
+                    'Content-type': "application/json",
+                },
+                body: JSON.stringify(formData),
+            })
+
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setPublishError(data.message);
+                return;
+            }
+
+            if (res.ok) {
+                setPublishError(null);
+                navigate(`/post/${data.slug}`)
+            }
+
+        } catch (error) {
+            setPublishError("Something went wrong")
+        }
+    }
+
     useEffect(() => {
         handleImageUpload();
     }, [image])
     return (
         <div className="p-3 max-w-3xl mx-auto min-h-screen">
             <h2 className='text-center text-2xl font-semibold my-7'>Create a post</h2>
-            <form className='flex flex-col gap-4'>
+            <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                 <div className='flex flex-col sm:flex-row gap-4 justify-between'>
-                    <TextInput type='text' placeholder='Title' required id='title' className='flex-1' />
-                    <Select>
+                    <TextInput type='text' onChange={(e) => setFormData({ ...formData, title: e.target.value })} placeholder='Title' required id='title' className='flex-1' />
+                    <Select onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
                         <option value={"uncategorized"}>Select a category</option>
                         <option value={"programming"}>Programming</option>
                         <option value={"nature"}>Nature</option>
@@ -87,9 +121,18 @@ const CreatePost = () => {
 
                 </div>
                 {formData.image && <img src={formData.image} className='h-72 w-full object-cover rounded-md' />}
-                <ReactQuill className='h-72 mb-12' theme="snow" required />
+                <ReactQuill onChange={(value) => setFormData({ ...formData, content: value })} className='h-72 mb-12' theme="snow" required />
                 <Button type='submit' gradientDuoTone={"cyanToBlue"}>Publish</Button>
             </form>
+            {
+                publishError && <Alert className='mt-5' color={"failure"}>{publishError}</Alert>
+            }
+
+            {
+                imageUploadError && <Alert className='mt-5' color={"failure"}>
+                    {imageUploadError}
+                </Alert>
+            }
         </div>
 
     )
