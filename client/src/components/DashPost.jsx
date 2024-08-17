@@ -1,4 +1,4 @@
-import { Table } from 'flowbite-react'
+import { Button, Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from "react-redux"
 import { Link } from 'react-router-dom'
@@ -6,6 +6,26 @@ import { Link } from 'react-router-dom'
 const DashPost = () => {
   const [posts, setPosts] = useState([])
   const { currentUser } = useSelector(state => state.user)
+  const [showMore, setShowMore] = useState(true);
+
+  const handleShowMore = async () => {
+    const startIndex = posts.length;
+
+    try {
+      const res = await fetch(`/api/post/getpost?userId=${currentUser._id}&startIndex=${startIndex}`)
+      const data = await res.json();
+
+      if (res.ok) {
+        setPosts((prev) => [...prev, ...data.posts]);
+        if (data.posts.length < 9) {
+          setShowMore(false)
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+
+    }
+  }
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -14,8 +34,12 @@ const DashPost = () => {
         const data = await res.json();
 
         if (res.ok) {
-          console.log(data.posts);
           setPosts(data.posts)
+          console.log(data.posts.length);
+
+          if (data.posts.length < 9) {
+            setShowMore(false)
+          }
         }
       } catch (error) {
         console.log(error.message);
@@ -27,7 +51,7 @@ const DashPost = () => {
     }
   }, [currentUser._id])
   return (
-    <div className="overflow-x-auto table-auto mx-auto w-full p-3 scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+    <div className="overflow-x-auto flex flex-col table-auto mx-auto w-full p-3 scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.isAdmin && posts.length > 0 ? (
         <Table className='shadow-md rounded-lg'>
           <Table.Head>
@@ -70,35 +94,18 @@ const DashPost = () => {
                 </Table.Row>
               )
             })}
-            {/* <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              Microsoft Surface Pro
-            </Table.Cell>
-            <Table.Cell>White</Table.Cell>
-            <Table.Cell>Laptop PC</Table.Cell>
-            <Table.Cell>$1999</Table.Cell>
-            <Table.Cell>
-              <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                Edit
-              </a>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">Magic Mouse 2</Table.Cell>
-            <Table.Cell>Black</Table.Cell>
-            <Table.Cell>Accessories</Table.Cell>
-            <Table.Cell>$99</Table.Cell>
-            <Table.Cell>
-              <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                Edit
-              </a>
-            </Table.Cell>
-          </Table.Row> */}
+
           </Table.Body>
         </Table>
       ) : (
         <p>There is no any post</p>
       )}
+
+      {
+        showMore ? (
+          <Button onClick={handleShowMore} className='my-6 bg-teal-500 self-center'>Show more</Button>
+        ) : null
+      }
     </div>
   )
 }
