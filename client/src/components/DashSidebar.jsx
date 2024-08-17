@@ -7,8 +7,11 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { IoDocumentText } from "react-icons/io5";
 
 export function DashSidebar() {
+  const { currentUser } = useSelector(state => state.user)
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -40,12 +43,12 @@ export function DashSidebar() {
   return (
     <Sidebar aria-label="Default sidebar example" className="w-full md:w-56">
       <Sidebar.Items>
-        <Sidebar.ItemGroup>
+        <Sidebar.ItemGroup className="flex flex-col gap-1">
           <Link to={"/dashboard?tab=profile"}>
             <Sidebar.Item
               href="#"
               icon={HiUser}
-              label="User"
+              label={currentUser.isAdmin ? "Admin" : "User"}
               labelColor="dark"
               active={tab === "profile"}
               as={"div"}
@@ -53,6 +56,19 @@ export function DashSidebar() {
               Profile
             </Sidebar.Item>
           </Link>
+
+          {currentUser.isAdmin && <Link to={"/dashboard?tab=post"}>
+            <Sidebar.Item
+              href="#"
+              icon={IoDocumentText}
+              labelColor="dark"
+              active={tab === "post"}
+              as={"div"}
+            >
+              Post
+            </Sidebar.Item>
+          </Link>}
+
           <Sidebar.Item onClick={handleSignout} href="#" icon={HiArrowSmRight}>
             Sign out
           </Sidebar.Item>
