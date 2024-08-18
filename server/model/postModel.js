@@ -22,7 +22,8 @@ const postSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default: "https://www.quora.com/What-is-a-blog-post",
+      default:
+        "https://www.blogtyrant.com/wp-content/uploads/2017/02/how-to-write-a-good-blog-post.png",
     },
     category: {
       type: String,

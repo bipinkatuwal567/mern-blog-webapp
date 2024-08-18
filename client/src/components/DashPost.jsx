@@ -12,7 +12,8 @@ const DashPost = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null)
-  
+
+
 
   const handleShowMore = async () => {
     const startIndex = posts.length;
@@ -108,7 +109,7 @@ const DashPost = () => {
                   <Table.Cell>{item.title}</Table.Cell>
                   <Table.Cell className='capitalize'>{item.category}</Table.Cell>
                   <Table.Cell>
-                    <Link to={`/post/edit-post/${item._id}`} className="font-medium text-cyan-600 hover:underline cursor-pointer dark:text-cyan-500">
+                    <Link to={`/update-post/${item._id}`} className="font-medium text-cyan-600 hover:underline cursor-pointer dark:text-cyan-500">
                       Edit
                     </Link>
                   </Table.Cell>
