@@ -9,6 +9,7 @@ import { signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { IoDocumentText } from "react-icons/io5";
+import { FaUsers } from "react-icons/fa";
 
 export function DashSidebar() {
   const { currentUser } = useSelector(state => state.user)
@@ -57,17 +58,32 @@ export function DashSidebar() {
             </Sidebar.Item>
           </Link>
 
-          {currentUser.isAdmin && <Link to={"/dashboard?tab=post"}>
-            <Sidebar.Item
-              href="#"
-              icon={IoDocumentText}
-              labelColor="dark"
-              active={tab === "post"}
-              as={"div"}
-            >
-              Post
-            </Sidebar.Item>
-          </Link>}
+          {currentUser.isAdmin && (
+            <>
+              <Link to={"/dashboard?tab=post"}>
+                <Sidebar.Item
+                  href="#"
+                  icon={IoDocumentText}
+                  labelColor="dark"
+                  active={tab === "post"}
+                  as={"div"}
+                >
+                  Post
+                </Sidebar.Item>
+              </Link>
+              <Link to={"/dashboard?tab=users"}>
+                <Sidebar.Item
+                  href="#"
+                  icon={FaUsers}
+                  labelColor="dark"
+                  active={tab === "users"}
+                  as={"div"}
+                >
+                  Users
+                </Sidebar.Item>
+              </Link>
+            </>
+          )}
 
           <Sidebar.Item onClick={handleSignout} href="#" icon={HiArrowSmRight}>
             Sign out

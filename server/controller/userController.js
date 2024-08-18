@@ -106,7 +106,7 @@ export const getUsers = async (req, res, next) => {
       createdAt: {$gte: oneMonthAgo}
     })
 
-    res.status(200).json({usersWithOutPassword, totalUsers, lastMonthUsers})
+    res.status(200).json({users: usersWithOutPassword, totalUsers, lastMonthUsers})
 
   } catch (error) {
     next(error)
