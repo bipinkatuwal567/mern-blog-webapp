@@ -14,8 +14,6 @@ const DashUsers = () => {
     const [showModal, setShowModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null)
 
-
-
     const handleShowMore = async () => {
         const startIndex = users.length;
 
@@ -36,6 +34,23 @@ const DashUsers = () => {
     }
 
     const handleDeletePost = async () => {
+        setShowModal(false)
+        try {
+            const res = await fetch(`/api/user/delete-user/${userToDelete}`, {
+                method: "DELETE"
+            })
+            const data = await res.json();
+            console.log(data);
+            
+
+            if (res.ok) {
+                setUsers((users) => users.filter(user => user._id !== userToDelete))
+                toast.success("User has been deleted")
+            }
+        } catch (error) {
+            console.log(error.message);
+
+        }
     }
 
     useEffect(() => {
