@@ -96,17 +96,25 @@ const DashPost = () => {
           <Table.Body className="divide-y">
 
             {posts.map((item) => {
+              
               return (
                 <Table.Row key={item._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {new Date(item.updatedAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
-                    <Link>
+                    <Link to={`/post/${item.slug}`}>
                       <img src={item.image} className='object-cover bg-center w-16 h-10' alt={item.slug} />
                     </Link>
                   </Table.Cell>
-                  <Table.Cell>{item.title}</Table.Cell>
+                  <Table.Cell>
+                    <Link
+                      className='font-medium text-gray-900 dark:text-white'
+                      to={`/post/${item.slug}`}
+                    >
+                      {item.title}
+                    </Link>
+                  </Table.Cell>
                   <Table.Cell className='capitalize'>{item.category}</Table.Cell>
                   <Table.Cell>
                     <Link to={`/update-post/${item._id}`} className="font-medium text-cyan-600 hover:underline cursor-pointer dark:text-cyan-500">
