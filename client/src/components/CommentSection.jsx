@@ -1,13 +1,15 @@
 import { Alert, Button, Textarea } from "flowbite-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { TbSquareRoundedArrowUpFilled } from "react-icons/tb";
+import Comment from "./Comment";
 
 const CommentSection = ({ postId }) => {
     const { currentUser } = useSelector(state => state.user)
     const [comment, setComment] = useState("");
     const [commentError, setCommentError] = useState(null)
+    const [comments, setComments] = useState([])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,11 +31,32 @@ const CommentSection = ({ postId }) => {
             if (res.ok) {
                 setComment("");
                 setCommentError(null);
+                setComments([data, ...comments])
             }
         } catch (error) {
             setCommentError(error.message)
         }
     }
+
+    useEffect(() => {
+        const getComments = async () => {
+            try {
+                const res = await fetch(`/api/comment/getPostComments/${postId}`)
+                const data = await res.json();
+                if (res.ok) {
+                    setComments(data);
+                }
+            } catch (error) {
+                console.log(error.message);
+
+            }
+        }
+
+        getComments();
+    }, [postId])
+
+    console.log(comments);
+
 
     return (
         <div className="max-w-2xl mx-auto w-full p-3">
@@ -69,6 +92,25 @@ const CommentSection = ({ postId }) => {
                         )}
                     </form>
                 </div>
+            )}
+
+            {comments.length === 0 ? (
+                <p className="text-sm text-center my-8">No comments yet!</p>
+            ) : (
+                <>
+                    <div className="my-8 flex gap-2 items-center">
+                        <p>Comments: </p>
+                        <div className="border px-2 rounded-md">{comments.length}</div>
+                    </div>
+
+                    {
+                        comments.map(comment => {
+                            return (
+                                <Comment key={comment._id} comment={comment} />
+                            )
+                        })
+                    }
+                </>
             )}
         </div>
     )
