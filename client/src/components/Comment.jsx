@@ -2,10 +2,42 @@ import React, { useEffect, useState } from 'react'
 import moment from "moment"
 import { AiFillLike } from "react-icons/ai";
 import { useSelector } from 'react-redux';
+import { Button, Textarea } from 'flowbite-react';
 
-const Comment = ({ comment, onLike }) => {
+const Comment = ({ comment, onLike, onEdit }) => {
     const { currentUser } = useSelector(state => state.user)
     const [user, setUser] = useState({})
+    const [editedComment, setEditedComment] = useState("")
+    const [isEdit, setIsEdit] = useState(false)
+
+    const handleEdit = () => {
+        setIsEdit(true)
+        setEditedComment(comment.content)
+    }
+
+    const handleSave = async () => {
+        try {
+            const res = await fetch(`/api/comment/editComment/${comment._id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    content: editedComment
+                })
+            })
+
+            if (res.ok) {
+                setIsEdit(false)
+                onEdit(comment, editedComment)
+            }
+
+        } catch (error) {
+            console.log(error.message);
+
+        }
+    }
+
     useEffect(() => {
         const getUser = async () => {
             try {
@@ -35,16 +67,33 @@ const Comment = ({ comment, onLike }) => {
                     <span className='font-bold text-xs truncate'>{user ? `@${user.username}` : "Anynomous user"}</span>
                     <span className='text-gray-500 text-xs'>{moment(comment.createdAt).fromNow()}</span>
                 </div>
-                <p className='text-gray-500'>{comment.content}</p>
+                {
+                    isEdit ? (
+                        <div className='flex flex-col gap-3'>
+                            <Textarea id="comment"
+                                value={editedComment}
+                                onChange={(e) => setEditedComment(e.target.value)}
+                                required />
+                            <div className='flex self-end gap-2'>
+                                <Button size={"sm"} gradientDuoTone={"cyanToBlue"} onClick={handleSave}>Save</Button>
+                                <Button size={"sm"} gradientDuoTone={"cyanToBlue"} outline onClick={() => setIsEdit(false)}>Cancel</Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <p className='text-gray-500'>{comment.content}</p>
 
-                <div className='flex items-center gap-2 pt-2'>
-                    <button onClick={() => onLike(comment._id)}>
-                        <AiFillLike className={`w-4 h-4 hover:text-blue-500 text-gray-500 ${currentUser && comment.likes.includes(currentUser._id) && "!text-blue-500"}`} />
-                    </button>
-                    <p className='text-xs'>{`${comment.numberOfLikes} ${comment.numberOfLikes === 1 || comment.numberOfLikes === 0 ? "Like" : "Likes"}`}</p>
-                </div>
+                            <div className='flex items-center text-xs gap-2 pt-2'>
+                                <button onClick={() => onLike(comment._id)}>
+                                    <AiFillLike className={`w-4 h-4 hover:text-blue-500 text-gray-500 ${currentUser && comment.likes.includes(currentUser._id) && "!text-blue-500"}`} />
+                                </button>
+                                <p>{`${comment.numberOfLikes} ${comment.numberOfLikes === 1 || comment.numberOfLikes === 0 ? "Like" : "Likes"}`}</p>
+
+                                <span className='cursor-pointer hover:text-blue-500' onClick={handleEdit}>Edit</span>
+                            </div></>
+                    )
+                }
             </div>
-
         </div>
     )
 }

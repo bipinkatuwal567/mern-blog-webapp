@@ -69,7 +69,12 @@ const CommentSection = ({ postId }) => {
         }
     }
 
-    console.log(comments);
+    const handleEdit = (comment, editedComment) => {
+        setComments(comments => comments.map(c => c._id === comment._id ? {
+            ...c,
+            content: editedComment
+        } : c))
+    }
 
 
     useEffect(() => {
@@ -139,7 +144,12 @@ const CommentSection = ({ postId }) => {
                     {
                         comments?.map(comment => {
                             return (
-                                <Comment key={comment._id} comment={comment} onLike={handleLike} />
+                                <Comment
+                                    key={comment._id}
+                                    comment={comment}
+                                    onLike={handleLike}
+                                    onEdit={handleEdit} />
+
                             )
                         })
                     }
