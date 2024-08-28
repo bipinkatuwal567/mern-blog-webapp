@@ -4,7 +4,7 @@ import { AiFillLike } from "react-icons/ai";
 import { useSelector } from 'react-redux';
 import { Button, Textarea } from 'flowbite-react';
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     const { currentUser } = useSelector(state => state.user)
     const [user, setUser] = useState({})
     const [editedComment, setEditedComment] = useState("")
@@ -84,12 +84,15 @@ const Comment = ({ comment, onLike, onEdit }) => {
                             <p className='text-gray-500'>{comment.content}</p>
 
                             <div className='flex items-center text-xs gap-2 pt-2'>
-                                <button onClick={() => onLike(comment._id)}>
-                                    <AiFillLike className={`w-4 h-4 hover:text-blue-500 text-gray-500 ${currentUser && comment.likes.includes(currentUser._id) && "!text-blue-500"}`} />
-                                </button>
-                                <p>{`${comment.numberOfLikes} ${comment.numberOfLikes === 1 || comment.numberOfLikes === 0 ? "Like" : "Likes"}`}</p>
+                                <div className='flex items-center gap-1'>
+                                    <button onClick={() => onLike(comment._id)}>
+                                        <AiFillLike className={`w-4 h-4 hover:text-blue-500 text-gray-500 ${currentUser && comment.likes.includes(currentUser._id) && "!text-blue-500"}`} />
+                                    </button>
+                                    <p>{`${comment.numberOfLikes} ${comment.numberOfLikes === 1 || comment.numberOfLikes === 0 ? "Like" : "Likes"}`}</p>
+                                </div>
 
-                                <span className='cursor-pointer hover:text-blue-500' onClick={handleEdit}>Edit</span>
+                                <span className='cursor-pointer hover:text-blue-700' onClick={handleEdit}>Edit</span>
+                                <span className='cursor-pointer hover:text-red-500' onClick={() => onDelete(comment._id)}>Delete</span>
                             </div></>
                     )
                 }
