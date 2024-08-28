@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import moment from "moment"
+import { AiFillLike } from "react-icons/ai";
+import { useSelector } from 'react-redux';
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, onLike }) => {
+    const { currentUser } = useSelector(state => state.user)
     const [user, setUser] = useState({})
     useEffect(() => {
         const getUser = async () => {
@@ -33,7 +36,15 @@ const Comment = ({ comment }) => {
                     <span className='text-gray-500 text-xs'>{moment(comment.createdAt).fromNow()}</span>
                 </div>
                 <p className='text-gray-500'>{comment.content}</p>
+
+                <div className='flex items-center gap-2 pt-2'>
+                    <button onClick={() => onLike(comment._id)}>
+                        <AiFillLike className={`w-4 h-4 hover:text-blue-500 text-gray-500 ${currentUser && comment.likes.includes(currentUser._id) && "!text-blue-500"}`} />
+                    </button>
+                    <p className='text-xs'>{`${comment.numberOfLikes} ${comment.numberOfLikes === 1 || comment.numberOfLikes === 0 ? "Like" : "Likes"}`}</p>
+                </div>
             </div>
+
         </div>
     )
 }

@@ -83,7 +83,9 @@ const Header = () => {
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Dropdown.Item onClick={handleSignout} as={"span"}>Sign out</Dropdown.Item>
+            <Dropdown.Item>
+              <span onClick={handleSignout}>Sign Out</span>
+            </Dropdown.Item>
           </Dropdown>
         ) : (
           <Button gradientDuoTone={"cyanToBlue"} outline>

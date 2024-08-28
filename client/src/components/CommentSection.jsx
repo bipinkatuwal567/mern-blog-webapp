@@ -1,11 +1,12 @@
 import { Alert, Button, Textarea } from "flowbite-react"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { TbSquareRoundedArrowUpFilled } from "react-icons/tb";
 import Comment from "./Comment";
 
 const CommentSection = ({ postId }) => {
+    const navigate = useNavigate();
     const { currentUser } = useSelector(state => state.user)
     const [comment, setComment] = useState("");
     const [commentError, setCommentError] = useState(null)
@@ -14,7 +15,7 @@ const CommentSection = ({ postId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (comment.length > 200) {
+        if (comment?.length > 200) {
             return;
         }
 
@@ -38,6 +39,39 @@ const CommentSection = ({ postId }) => {
         }
     }
 
+    const handleLike = async (commentId) => {
+        try {
+            if (!currentUser) {
+                navigate("/signin")
+                return;
+            }
+
+            const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+                method: "PUT",
+            })
+
+            const data = await res.json()
+            console.log(data);
+
+
+            if (res.ok) {
+                setComments((comments) =>
+                    comments.map((comment) => comment._id === commentId ? {
+                        ...comment,
+                        likes: data.likes,
+                        numberOfLikes: data.numberOfLikes,
+                    } : comment)
+                )
+            }
+        } catch (error) {
+            console.log(error.message);
+
+        }
+    }
+
+    console.log(comments);
+
+
     useEffect(() => {
         const getComments = async () => {
             try {
@@ -55,7 +89,6 @@ const CommentSection = ({ postId }) => {
         getComments();
     }, [postId])
 
-    console.log(comments);
 
 
     return (
@@ -94,19 +127,19 @@ const CommentSection = ({ postId }) => {
                 </div>
             )}
 
-            {comments.length === 0 ? (
+            {comments && comments?.length === 0 ? (
                 <p className="text-sm text-center my-8">No comments yet!</p>
             ) : (
                 <>
                     <div className="my-8 flex gap-2 items-center">
                         <p>Comments: </p>
-                        <div className="border px-2 rounded-md">{comments.length}</div>
+                        <div className="border px-2 rounded-md">{comments?.length}</div>
                     </div>
 
                     {
-                        comments.map(comment => {
+                        comments?.map(comment => {
                             return (
-                                <Comment key={comment._id} comment={comment} />
+                                <Comment key={comment._id} comment={comment} onLike={handleLike} />
                             )
                         })
                     }
