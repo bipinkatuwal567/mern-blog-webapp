@@ -8,14 +8,14 @@ import { toggleTheme } from "../redux/theme/themeSlice";
 import { signOutSuccess } from "../redux/user/userSlice";
 
 const Header = () => {
-  const { theme } = useSelector((state) => state.theme);
 
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
 
   const handleSignout = async () => {
     try {
-      const res = await fetch("api/auth/signout", { method: "POST" })
+      const res = await fetch("/api/auth/signout", { method: "POST" })
       const data = await res.json();
 
       if (!res.ok) {

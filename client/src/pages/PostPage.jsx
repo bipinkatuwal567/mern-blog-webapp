@@ -2,6 +2,7 @@ import { Button, Spinner } from 'flowbite-react';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import CommentSection from '../components/CommentSection';
+import PostCard from '../components/PostCard';
 
 const PostPage = () => {
     const { postSlug } = useParams();
@@ -9,6 +10,7 @@ const PostPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, SetError] = useState(false);
     const [post, setPost] = useState(null);
+    const [recentPost, setRecentPost] = useState(null)
 
 
     useEffect(() => {
@@ -36,6 +38,27 @@ const PostPage = () => {
         fetchPost();
     }, [postSlug])
 
+    useEffect(() => {
+        const fetchRecentPost = async () => {
+            try {
+                const res = await fetch(`/api/post/getpost?limit=3`)
+                const data = await res.json();
+
+                if (res.ok) {
+                    setRecentPost(data.posts)
+                }
+
+            } catch (error) {
+                console.log(error.message);
+
+            }
+        }
+
+        fetchRecentPost();
+    }, [postSlug])
+
+
+
     if (loading) return (
         <div className='min-h-screen flex justify-center items-center'>
             <Spinner size={"xl"} />
@@ -61,6 +84,15 @@ const PostPage = () => {
             </div>
 
             <CommentSection postId={post?._id} />
+
+            <div className='flex items-center w-full justify-center flex-col my-10'>
+                <h2 className='text-xl font-semibold underline'>Recent Articles</h2>
+                <div className='flex flex-wrap gap-5 mt-5 justify-center'>
+                    {
+                        recentPost?.map(post => <PostCard key={post._id} post={post} />)
+                    }
+                </div>
+            </div>
         </main >
     )
 }
