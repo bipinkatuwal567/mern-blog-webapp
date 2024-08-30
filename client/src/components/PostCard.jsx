@@ -8,7 +8,7 @@ const PostCard = ({ post }) => {
 
     return (
         <div className='relative border shadow-md w-full h-[410px] overflow-hidden rounded-lg sm:w-[350px] transition-all flex flex-col justify-between pb-3'>
-            <div>
+            <div className='text-start'>
                 <img src={post.image} className='h-[260px] w-full  object-cover bg-center p-4' alt="" />
                 <div className='w-full px-4 py-2 flex flex-col'>
                     <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-2">
