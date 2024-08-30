@@ -4,6 +4,7 @@ import {
   HiArrowSmRight,
   HiUser,
 } from "react-icons/hi";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 import { signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
@@ -45,6 +46,18 @@ export function DashSidebar() {
     <Sidebar aria-label="Default sidebar example" className="w-full md:w-56">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
+
+          <Link to={"/dashboard?tab=dash"}>
+            <Sidebar.Item
+              href="#"
+              icon={TbLayoutDashboardFilled}
+              active={tab === "dash"}
+              as={"div"}
+            >
+              Dashboard
+            </Sidebar.Item>
+          </Link>
+
           <Link to={"/dashboard?tab=profile"}>
             <Sidebar.Item
               href="#"
