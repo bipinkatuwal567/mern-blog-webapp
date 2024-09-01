@@ -40,7 +40,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className='flex justify-center w-full'>
+      <div className='flex justify-center w-full py-10'>
         {
           posts && posts.length > 0 && (
             <div className='flex flex-col justify-center text-center'>
@@ -50,7 +50,11 @@ const Home = () => {
                   <PostCard key={post.id} post={post} />
                 )}
               </div>
+              <Link to={"/search"} className='text-lg text-teal-400 hover:underline mx-auto'>
+                View all posts
+              </Link>
             </div>
+
           )
         }
       </div>

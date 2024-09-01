@@ -47,16 +47,19 @@ export function DashSidebar() {
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
 
-          <Link to={"/dashboard?tab=dash"}>
-            <Sidebar.Item
-              href="#"
-              icon={TbLayoutDashboardFilled}
-              active={tab === "dash"}
-              as={"div"}
-            >
-              Dashboard
-            </Sidebar.Item>
-          </Link>
+          {currentUser.isAdmin && (
+            <Link to={"/dashboard?tab=dash"}>
+              <Sidebar.Item
+                href="#"
+                icon={TbLayoutDashboardFilled}
+                active={tab === "dash"}
+                as={"div"}
+              >
+                Dashboard
+              </Sidebar.Item>
+            </Link>
+
+          )}
 
           <Link to={"/dashboard?tab=profile"}>
             <Sidebar.Item

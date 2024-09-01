@@ -13,8 +13,6 @@ const DashPost = () => {
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null)
 
-
-
   const handleShowMore = async () => {
     const startIndex = posts.length;
 
@@ -60,12 +58,14 @@ const DashPost = () => {
         const res = await fetch(`/api/post/getpost?userId=${currentUser._id}`)
         const data = await res.json();
 
+
         if (res.ok) {
           setPosts(data.posts)
 
-          if (data.posts.length <= 9) {
+          if (data.posts.length < 10) {
             setShowMore(false)
           }
+          setShowMore(true)
         }
       } catch (error) {
         console.log(error.message);

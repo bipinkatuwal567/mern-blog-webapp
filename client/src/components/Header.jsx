@@ -1,6 +1,6 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/forest.png";
 import { AiOutlineMoon, AiOutlineSearch, AiOutlineSun } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,8 +10,13 @@ import { signOutSuccess } from "../redux/user/userSlice";
 const Header = () => {
 
   const dispatch = useDispatch();
+  const path = useLocation().pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   const handleSignout = async () => {
     try {
@@ -29,19 +34,36 @@ const Header = () => {
     }
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const urlParams = new URLSearchParams(location.search)
+    urlParams.set("searchTerm", searchTerm)
+    const searchQuery = urlParams.toString()
+    navigate(`/search?${searchQuery}`)
+  }
 
-  const path = useLocation().pathname;
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search)
+    const searchTermFromURL = urlParams.get("searchTerm")
+    if (searchTermFromURL) {
+      setSearchTerm(searchTermFromURL)
+    }
+  }, [location.search])
+
   return (
-    <Navbar className="shadow border-b">
+    <Navbar className="shadow border-b-2">
       <Link to={"/"}>
         <img src={Logo} className="flex-none w-10" />
       </Link>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <TextInput
           placeholder="Search..."
+          rightIcon={AiOutlineSearch}
           type="text"
           className="hidden lg:inline"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </form>
       <Button
@@ -83,8 +105,8 @@ const Header = () => {
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Dropdown.Item>
-              <span onClick={handleSignout}>Sign Out</span>
+            <Dropdown.Item className="relative p-0">
+              <span className=" w-full py-2 px-4 text-left" onClick={handleSignout}>Sign Out</span>
             </Dropdown.Item>
           </Dropdown>
         ) : (

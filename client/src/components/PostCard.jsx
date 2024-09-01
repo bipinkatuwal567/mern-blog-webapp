@@ -1,13 +1,10 @@
-import { Button, Card } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import React from 'react'
-import { IoMdArrowRoundForward } from "react-icons/io";
 import { Link } from 'react-router-dom';
 
 const PostCard = ({ post }) => {
-    console.log(post);
-
     return (
-        <div className='relative border shadow-md w-full h-[410px] overflow-hidden rounded-lg sm:w-[350px] transition-all flex flex-col justify-between pb-3'>
+        <div className='relative border dark:border-gray-700 shadow-md w-full h-[410px] overflow-hidden rounded-lg sm:w-[350px] transition-all flex flex-col justify-between pb-3'>
             <div className='text-start'>
                 <img src={post.image} className='h-[260px] w-full  object-cover bg-center p-4' alt="" />
                 <div className='w-full px-4 py-2 flex flex-col'>
@@ -24,6 +21,7 @@ const PostCard = ({ post }) => {
                     <Button gradientDuoTone={"cyanToBlue"} className='w-full'>Read Article
                     </Button>
                 </Link>
+
             </div>
         </div>
     )
