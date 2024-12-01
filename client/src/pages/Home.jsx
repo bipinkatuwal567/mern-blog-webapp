@@ -1,10 +1,34 @@
-import { Badge, Button } from 'flowbite-react'
+import { Badge, Button, TextInput } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import PostCard from '../components/PostCard'
+import { AiOutlineSearch } from "react-icons/ai";
 
 const Home = () => {
   const [posts, setPosts] = useState(null)
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const urlParams = new URLSearchParams(location.search)
+    urlParams.set("searchTerm", searchTerm)
+    const searchQuery = urlParams.toString()
+
+    navigate(`/search?${searchQuery}`)
+  }
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search)
+    const searchTermFromURL = urlParams.get("searchTerm")
+    if (searchTermFromURL) {
+      setSearchTerm(searchTermFromURL)
+    } else {
+      setSearchTerm("")
+    }
+  }, [location.search])
+
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -34,9 +58,24 @@ const Home = () => {
           <p className=''>
             Here you'll find a variety of articles and tutorials on topics such as web development, software engineering, and programming languages.
           </p>
-          <Link to={"/search"}>
+
+          <form onSubmit={handleSubmit} className='mt-8'>
+            <TextInput
+              placeholder="Search..."
+              rightIcon={AiOutlineSearch}
+              type="text"
+              className="w-72"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                borderRadius: 8,
+              }}
+            />
+          </form>
+
+          {/* <Link to={"/search"}>
             <Button gradientDuoTone={"cyanToBlue"} pill className='mt-5'>View all posts</Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
 
@@ -47,7 +86,7 @@ const Home = () => {
               <h3 className='md:text-2xl text-xl font-semibold'>Recent Posts</h3>
               <div className='flex flex-wrap py-10 justify-center gap-5'>
                 {posts.map(post =>
-                  <PostCard key={post.id} post={post} />
+                  <PostCard key={post._id} post={post} />
                 )}
               </div>
               <Link to={"/search"} className='text-lg text-teal-400 hover:underline mx-auto'>

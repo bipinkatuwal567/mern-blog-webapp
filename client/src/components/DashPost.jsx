@@ -13,6 +13,9 @@ const DashPost = () => {
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null)
 
+  console.log(posts);
+  
+
   const handleShowMore = async () => {
     const startIndex = posts.length;
 
@@ -57,6 +60,8 @@ const DashPost = () => {
       try {
         const res = await fetch(`/api/post/getpost?userId=${currentUser._id}`)
         const data = await res.json();
+        console.log(data);
+        
 
 
         if (res.ok) {
@@ -74,6 +79,7 @@ const DashPost = () => {
     }
     if (currentUser.isAdmin) {
       fetchPost();
+      
     }
   }, [currentUser._id])
   return (

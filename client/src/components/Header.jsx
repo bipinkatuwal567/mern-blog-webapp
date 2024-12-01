@@ -1,21 +1,19 @@
-import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/forest.png";
-import { AiOutlineMoon, AiOutlineSearch, AiOutlineSun } from "react-icons/ai";
+import { AiOutlineMoon, AiOutlineSun } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { signOutSuccess } from "../redux/user/userSlice";
 
 const Header = () => {
-
-  const dispatch = useDispatch();
   const path = useLocation().pathname;
-  const location = useLocation();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  const [searchTerm, setSearchTerm] = useState("");
+
+
 
 
   const handleSignout = async () => {
@@ -34,21 +32,7 @@ const Header = () => {
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const urlParams = new URLSearchParams(location.search)
-    urlParams.set("searchTerm", searchTerm)
-    const searchQuery = urlParams.toString()
-    navigate(`/search?${searchQuery}`)
-  }
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search)
-    const searchTermFromURL = urlParams.get("searchTerm")
-    if (searchTermFromURL) {
-      setSearchTerm(searchTermFromURL)
-    }
-  }, [location.search])
 
   return (
     <Navbar className="shadow border-b-2">
@@ -56,23 +40,14 @@ const Header = () => {
         <img src={Logo} className="flex-none w-10" />
       </Link>
 
-      <form onSubmit={handleSubmit}>
-        <TextInput
-          placeholder="Search..."
-          rightIcon={AiOutlineSearch}
-          type="text"
-          className="hidden lg:inline"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </form>
-      <Button
+
+      {/* <Button
         className="h-10 w-12 flex justify-center items-center lg:hidden"
         pill
         color={"gray"}
       >
         <AiOutlineSearch className="text-lg" />
-      </Button>
+      </Button> */}
 
       <div className="flex justify-center items-center gap-2 md:order-2">
         <Button
